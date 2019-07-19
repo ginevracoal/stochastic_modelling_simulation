@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 from IPython.display import display
 
+
 class ReplayBuffer:
     def __init__(self, capacity):
         self.capacity = capacity
@@ -247,7 +248,7 @@ def gif(policy_net):
     state = env.reset()
     cum_reward = 0
     frames = []
-    for t in range(50000):
+    for t in range(500):
         # Render into buffer.
         frames.append(env.render(mode='rgb_array'))
         action = policy_net.get_action(state)
@@ -289,7 +290,7 @@ def sac_train():
     batch_size = 10 #128
 
     while frame_idx < max_frames:
-        state = env.reset()
+        #state = env.reset()
         episode_reward = 0
 
         for step in range(max_steps):
@@ -323,6 +324,20 @@ def sac_train():
 
         rewards.append(episode_reward)
 
+    gif(policy_net)
+
+
+def universe_train():
+    env = gym.make('flashgames.NeonRace-v0')  # You can run many environment in parallel
+    env.configure(remotes=1)  # automatically creates a local docker container
+    observation_n = env.reset()  # Initiate the environment and get list of observations of its initial state
+    while True:
+        action_n = [[('KeyEvent', 'ArrowUp', True)] for ob in observation_n]  # your agent here
+        observation_n, reward_n, done_n, info = env.step(action_n)  # Reinforcement Learning action by agent
+        print("observation: ", observation_n)  # Observation of the environment
+        print("reward: ", reward_n)  # If the action had any postive impact +1/-1
+        env.render()  # Run the agent on the environment
+
 
 def stupid_train():
     env = gym.make('Pendulum-v0')
@@ -343,6 +358,7 @@ def main():
 
     # stupid_train()
     sac_train()
+    # universe_train()
 
 
 if __name__ == "__main__":

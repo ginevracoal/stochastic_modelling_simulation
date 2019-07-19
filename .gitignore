@@ -1,1 +1,3 @@
 lab/.ipynb_checkpoints/
+soft-actor-critic/models/*
+soft-actor-critic/presentation/*
